@@ -22,10 +22,16 @@ async function main(): Promise<number> {
   await core.group('Godot setup', setupDependencies);
 
   const exportResults = await core.group('Exporting', runExport);
-  if (core.getInput('create_release') === 'true' && exportResults) {
-    await core.group(`Create release v${newVersion.format()}`, async () => {
-      await createRelease(newVersion, exportResults);
-    });
+  if (exportResults) {
+    if (core.getInput('create_release') === 'true') {
+      await core.group(`Create release v${newVersion.format()}`, async () => {
+        await createRelease(newVersion, exportResults);
+      });
+    } else {
+      await core.group(`Move exported games`, async () => {
+        await io.mv(path.join(actionWorkingPath, 'builds'), path.join(relativeProjectPath, 'builds'));
+      });
+    }
   }
   return 0;
 }

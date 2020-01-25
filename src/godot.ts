@@ -72,12 +72,9 @@ async function runExport(): Promise<ExportResult[]> {
   let dirNo = 0;
   core.info(`Using project file at ${projectPath}`);
 
-  const outputDir = path.join(actionWorkingPath, 'builds');
-  core.info(`::set-output name=build::${outputDir}`);
-
   for (const preset of getExportPresets()) {
     const sanitized = sanitize(preset.name);
-    const buildDir = path.join(outputDir, dirNo.toString());
+    const buildDir = path.join(actionWorkingPath, 'builds', dirNo.toString());
     dirNo++;
 
     exportResults.push({
