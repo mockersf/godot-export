@@ -2,7 +2,7 @@ import * as io from '@actions/io';
 import * as github from '@actions/github';
 import * as core from '@actions/core';
 import * as semver from 'semver';
-import { setupExecutable, setupTemplates, runExport, createRelease, hasExportPresets } from './godot';
+import { setupExecutable, setupTemplates, runExport, createRelease, hasExportPresets, moveExports } from './godot';
 import * as path from 'path';
 import * as os from 'os';
 import { getRepositoryInfo } from './util';
@@ -28,8 +28,8 @@ async function main(): Promise<number> {
         await createRelease(newVersion, exportResults);
       });
     } else {
-      await core.group(`Move exported games`, async () => {
-        await io.mv(path.join(actionWorkingPath, 'builds'), path.join(relativeProjectPath, 'builds'));
+      await core.group(`Move exported files`, async () => {
+        await moveExports(exportResults);
       });
     }
   }
