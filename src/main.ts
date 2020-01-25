@@ -10,6 +10,7 @@ import { getRepositoryInfo } from './util';
 const actionWorkingPath = path.resolve(path.join(os.homedir(), '/.local/share/godot'));
 const godotTemplateVersion = core.getInput('godot_template_version');
 const relativeProjectPath = core.getInput('relative_project_path');
+const relativeProjectExportsPath = path.join(relativeProjectPath, 'exports');
 const githubClient = new github.GitHub(process.env.GITHUB_TOKEN ?? '');
 
 async function main(): Promise<number> {
@@ -111,4 +112,4 @@ function logAndExit(error: Error): void {
 
 main().catch(logAndExit);
 
-export { actionWorkingPath, godotTemplateVersion, relativeProjectPath, githubClient };
+export { actionWorkingPath, godotTemplateVersion, relativeProjectPath, relativeProjectExportsPath, githubClient };

@@ -3,7 +3,13 @@ import * as core from '@actions/core';
 import * as io from '@actions/io';
 import * as path from 'path';
 import * as fs from 'fs';
-import { actionWorkingPath, relativeProjectPath, godotTemplateVersion, githubClient } from './main';
+import {
+  actionWorkingPath,
+  relativeProjectPath,
+  relativeProjectExportsPath,
+  godotTemplateVersion,
+  githubClient,
+} from './main';
 import * as ini from 'ini';
 import { ExportPresets, ExportPreset, ExportResult } from './types/GodotExport';
 import sanitize from 'sanitize-filename';
@@ -123,7 +129,7 @@ async function createRelease(version: SemVer, exportResults: ExportResult[]): Pr
 }
 
 async function moveExports(exportResults: ExportResult[]): Promise<number> {
-  await io.mkdirP(path.join(relativeProjectPath, 'exports'));
+  await io.mkdirP(relativeProjectExportsPath);
 
   const promises: Promise<void>[] = [];
   for (const exportResult of exportResults) {
@@ -162,7 +168,7 @@ async function upload(uploadUrl: string, zipPath: string): Promise<void> {
 }
 
 async function move(zipPath: string): Promise<void> {
-  await io.mv(zipPath, path.join(relativeProjectPath, 'exports', path.basename(zipPath)));
+  await io.mv(zipPath, path.join(relativeProjectExportsPath, path.basename(zipPath)));
 }
 
 function findExecutablePath(basePath: string): string | undefined {
