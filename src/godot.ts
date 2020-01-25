@@ -123,6 +123,8 @@ async function createRelease(version: SemVer, exportResults: ExportResult[]): Pr
 }
 
 async function moveExports(exportResults: ExportResult[]): Promise<number> {
+  await io.mkdirP(path.join(relativeProjectPath, 'exports'));
+
   const promises: Promise<void>[] = [];
   for (const exportResult of exportResults) {
     promises.push(move(await zip(exportResult)));
@@ -160,7 +162,7 @@ async function upload(uploadUrl: string, zipPath: string): Promise<void> {
 }
 
 async function move(zipPath: string): Promise<void> {
-  await io.mv(zipPath, path.join(relativeProjectPath, 'exports'));
+  await io.mv(zipPath, path.join(relativeProjectPath, 'exports', path.basename(zipPath)));
 }
 
 function findExecutablePath(basePath: string): string | undefined {
